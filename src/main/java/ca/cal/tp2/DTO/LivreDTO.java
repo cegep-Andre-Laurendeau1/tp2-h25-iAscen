@@ -11,10 +11,6 @@ public record LivreDTO(
         String editeur,
         int nombrePages
 ) {
-    public LivreDTO(DocumentDTO documentDTO, String ISBN, String auteur, String editeur, int nombrePages) {
-        this(documentDTO.documentID(), documentDTO.titre(), documentDTO.nombreExemplaires(),
-                ISBN, auteur, editeur, nombrePages);
-    }
 
     public static LivreDTO fromEntity(Livre livre) {
         return new LivreDTO(

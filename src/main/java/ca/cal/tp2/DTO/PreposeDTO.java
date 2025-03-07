@@ -8,11 +8,6 @@ public record PreposeDTO(
         String email,
         String phoneNumber
 ) {
-    public PreposeDTO(UtilisateurDTO utilisateurDTO) {
-        this(utilisateurDTO.userID(), utilisateurDTO.name(), utilisateurDTO.email(),
-                utilisateurDTO.phoneNumber());
-    }
-
     public static PreposeDTO fromEntity(Prepose prepose) {
         return new PreposeDTO(
                 prepose.getUserID(),

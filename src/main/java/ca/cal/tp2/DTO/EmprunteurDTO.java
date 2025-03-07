@@ -8,11 +8,6 @@ public record EmprunteurDTO(
         String email,
         String phoneNumber
 ) {
-    public EmprunteurDTO(UtilisateurDTO utilisateurDTO) {
-        this(utilisateurDTO.userID(), utilisateurDTO.name(), utilisateurDTO.email(),
-                utilisateurDTO.phoneNumber());
-    }
-
     public static EmprunteurDTO fromEntity(Emprunteur emprunteur) {
         return new EmprunteurDTO(
                 emprunteur.getUserID(),

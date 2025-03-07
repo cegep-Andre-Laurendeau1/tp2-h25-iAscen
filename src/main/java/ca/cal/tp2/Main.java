@@ -2,6 +2,10 @@ package ca.cal.tp2;
 
 import ca.cal.tp2.DAO.*;
 import ca.cal.tp2.DTO.*;
+import ca.cal.tp2.modele.Emprunt;
+import ca.cal.tp2.modele.Emprunteur;
+import ca.cal.tp2.modele.Prepose;
+import ca.cal.tp2.modele.Utilisateur;
 import ca.cal.tp2.service.BibliothequeService;
 
 import java.sql.SQLException;
@@ -22,6 +26,46 @@ public class Main {
 
         System.out.println("========== DÉMONSTRATION DE LA BIBLIOTHÈQUE ==========\n");
 
+        // 0. Gestion des utilisateurs
+        System.out.println("0. GESTION DES UTILISATEURS");
+
+        // Ajouter un préposé via le DTO
+        PreposeDTO preposeDTO = new PreposeDTO(0, "Pierre Tremblay", "pierre.tremblay@biblio.com", "514-555-1234");
+        PreposeDTO preposeAjoute = bibliothequeService.ajouterPrepose(preposeDTO);
+        System.out.println("Préposé ajouté via DTO: " + preposeAjoute);
+
+        // Ajouter un autre préposé directement
+        Prepose prepose2 = new Prepose();
+        prepose2.setName("Jacques Martin");
+        prepose2.setEmail("jacques.martin@biblio.com");
+        prepose2.setPhoneNumber("514-555-5678");
+        prepose2 = utilisateurDAO.ajouterPrepose(prepose2);
+        System.out.println("Préposé ajouté directement: " + prepose2.getName() + " (ID: " + prepose2.getUserID() + ")");
+
+        // Obtenir la liste de tous les utilisateurs en utilisant UtilisateurDTO
+        System.out.println("\nListe de tous les utilisateurs via DTO:");
+        List<UtilisateurDTO> utilisateursDTO = bibliothequeService.getAllUtilisateurs();
+        utilisateursDTO.forEach(System.out::println);
+
+        // Obtenir la liste des préposés en utilisant PreposeDTO
+        System.out.println("\nListe des préposés via DTO:");
+        List<PreposeDTO> preposesDTO = bibliothequeService.getAllPreposes();
+        preposesDTO.forEach(System.out::println);
+
+        // Obtenir la liste de tous les utilisateurs directement
+        System.out.println("\nListe de tous les utilisateurs (modèles):");
+        List<Utilisateur> utilisateurs = utilisateurDAO.getUtilisateurs();
+        utilisateurs.forEach(u -> System.out.println("ID: " + u.getUserID() + ", Nom: " + u.getName() + ", Type: " + u.getClass().getSimpleName()));
+
+        // Rechercher un utilisateur par ID avec DTO
+        if (!utilisateursDTO.isEmpty()) {
+            long utilisateurId = utilisateursDTO.get(0).userID();
+            UtilisateurDTO utilisateurTrouveDTO = bibliothequeService.getUtilisateurById(utilisateurId);
+            System.out.println("\nUtilisateur trouvé par ID " + utilisateurId + " (via DTO): " + utilisateurTrouveDTO);
+        }
+
+        System.out.println();
+
         // 1. Ajouter des emprunteurs
         System.out.println("1. AJOUT D'EMPRUNTEURS");
         EmprunteurDTO emprunteur1 = bibliothequeService.ajouterEmprunteur(
@@ -31,6 +75,12 @@ public class Main {
 
         System.out.println("Emprunteur ajouté: " + emprunteur1);
         System.out.println("Emprunteur ajouté: " + emprunteur2);
+
+        // Obtenir la liste des emprunteurs
+        System.out.println("\nListe des emprunteurs:");
+        List<Emprunteur> emprunteurs = utilisateurDAO.getEmprunteurs();
+        emprunteurs.forEach(e -> System.out.println("ID: " + e.getUserID() + ", Nom: " + e.getName() + ", Email: " + e.getEmail()));
+
         System.out.println();
 
         // 2. Ajouter des documents
@@ -66,6 +116,19 @@ public class Main {
         System.out.println("CD ajouté: " + cd2);
         System.out.println("DVD ajouté: " + dvd1);
         System.out.println("DVD ajouté: " + dvd2);
+
+        // Mettre à jour le nombre d'exemplaires d'un document
+        System.out.println("\nMise à jour du stock de documents:");
+
+        // Augmenter le nombre d'exemplaires des Misérables (nouveau stock reçu)
+        DocumentDTO avantMiseAJour = bibliothequeService.rechercherParTitre("Misérables").get(0);
+        System.out.println("Avant mise à jour - " + avantMiseAJour);
+
+        boolean misAJour = documentDAO.updateNombreExemplaires(livre1.documentID(), 8);
+        System.out.println("Mise à jour du nombre d'exemplaires pour 'Les Misérables': " + misAJour);
+
+        DocumentDTO apresMiseAJour = bibliothequeService.rechercherParTitre("Misérables").get(0);
+        System.out.println("Après mise à jour - " + apresMiseAJour);
         System.out.println();
 
         // 3. Rechercher des documents
@@ -89,6 +152,12 @@ public class Main {
         resultatsRechercheArtiste.forEach(System.out::println);
         System.out.println();
 
+        // Recherche par directeur
+        System.out.println("Recherche par directeur 'Jeunet':");
+        List<DVDDTO> resultatsRechercheDirecteur = bibliothequeService.rechercherDVDsParDirecteur("Jeunet");
+        resultatsRechercheDirecteur.forEach(System.out::println);
+        System.out.println();
+
         // 4. Effectuer des emprunts
         System.out.println("4. EMPRUNTS DE DOCUMENTS");
 
@@ -110,6 +179,35 @@ public class Main {
         EmpruntDTO emprunt4 = bibliothequeService.emprunterDocument(emprunteur2.userID(), dvd1.documentID());
         System.out.println(emprunt4);
         System.out.println();
+
+        // Afficher tous les emprunts
+        System.out.println("Liste de tous les emprunts dans le système:");
+        List<Emprunt> tousLesEmprunts = empruntDAO.getEmprunts();
+        tousLesEmprunts.forEach(e -> System.out.println("Emprunt ID: " + e.getId() +
+                ", Emprunteur: " + e.getEmprunteur().getName() +
+                ", Date: " + e.getDateEmprunt() +
+                ", Statut: " + e.getStatus()));
+        System.out.println();
+
+        // Récupérer un emprunt spécifique par ID
+        if (!tousLesEmprunts.isEmpty()) {
+            long empruntId = tousLesEmprunts.get(0).getId();
+            Emprunt empruntRecupere = empruntDAO.getEmpruntById(empruntId);
+            System.out.println("Détails de l'emprunt avec ID " + empruntId + ":");
+            System.out.println("  Emprunteur: " + empruntRecupere.getEmprunteur().getName());
+            System.out.println("  Date d'emprunt: " + empruntRecupere.getDateEmprunt());
+            System.out.println("  Statut: " + empruntRecupere.getStatus());
+            System.out.println();
+
+            // Mettre à jour le statut d'un emprunt
+            boolean statutMisAJour = empruntDAO.updateStatutEmprunt(empruntId, "EN_COURS");
+            System.out.println("Statut de l'emprunt " + empruntId + " mis à jour: " + statutMisAJour);
+
+            // Vérifier que le statut a bien été mis à jour
+            Emprunt empruntApresMAJ = empruntDAO.getEmpruntById(empruntId);
+            System.out.println("Nouveau statut: " + empruntApresMAJ.getStatus());
+            System.out.println();
+        }
 
         // 5. Voir les documents disponibles après les emprunts
         System.out.println("5. DOCUMENTS DISPONIBLES APRÈS EMPRUNTS");

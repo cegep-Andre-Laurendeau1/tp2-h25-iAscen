@@ -10,11 +10,6 @@ public record CDDTO(
         int duree,
         String genre
 ) {
-    public CDDTO(DocumentDTO documentDTO, String artiste, int duree, String genre) {
-        this(documentDTO.documentID(), documentDTO.titre(), documentDTO.nombreExemplaires(),
-                artiste, duree, genre);
-    }
-
     public static CDDTO fromEntity(CD cd) {
         return new CDDTO(
                 cd.getDocumentID(),

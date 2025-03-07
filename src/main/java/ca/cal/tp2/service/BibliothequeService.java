@@ -24,6 +24,39 @@ public class BibliothequeService {
         this.utilisateurDAO = utilisateurDAO;
     }
 
+    public List<UtilisateurDTO> getAllUtilisateurs() {
+        List<Utilisateur> utilisateurs = utilisateurDAO.getUtilisateurs();
+        return utilisateurs.stream()
+                .map(UtilisateurDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    public List<PreposeDTO> getAllPreposes() {
+        List<Prepose> preposes = utilisateurDAO.getPreposes();
+        return preposes.stream()
+                .map(PreposeDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    public PreposeDTO ajouterPrepose(PreposeDTO preposeDTO) {
+        Prepose prepose = new Prepose();
+        prepose.setName(preposeDTO.name());
+        prepose.setEmail(preposeDTO.email());
+        prepose.setPhoneNumber(preposeDTO.phoneNumber());
+
+        prepose = utilisateurDAO.ajouterPrepose(prepose);
+
+        return PreposeDTO.fromEntity(prepose);
+    }
+
+    public UtilisateurDTO getUtilisateurById(long userId) {
+        Utilisateur utilisateur = utilisateurDAO.getUtilisateurById(userId);
+        if (utilisateur == null) {
+            throw new IllegalArgumentException("Utilisateur non trouvé avec ID: " + userId);
+        }
+        return UtilisateurDTO.fromEntity(utilisateur);
+    }
+
     public List<DocumentDTO> getAllDocuments() {
         List<Document> documents = documentDAO.getDocuments();
         return documents.stream()
@@ -148,7 +181,7 @@ public class BibliothequeService {
 
         Date dateRetourPrevue = calendar.getTime();
 
-        EmpruntDetail empruntDetail = empruntDAO.ajouterDocumentAEmprunt(emprunt, document, dateRetourPrevue);
+        empruntDAO.ajouterDocumentAEmprunt(emprunt, document, dateRetourPrevue);
 
         List<EmpruntDetail> details = empruntDAO.getDetailsEmprunt(emprunt.getId());
 

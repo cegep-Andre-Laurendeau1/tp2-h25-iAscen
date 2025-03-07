@@ -10,11 +10,6 @@ public record DVDDTO(
         int duree,
         String rating
 ) {
-    public DVDDTO(DocumentDTO documentDTO, String directeur, int duree, String rating) {
-        this(documentDTO.documentID(), documentDTO.titre(), documentDTO.nombreExemplaires(),
-                directeur, duree, rating);
-    }
-
     public static DVDDTO fromEntity(DVD dvd) {
         return new DVDDTO(
                 dvd.getDocumentID(),
