@@ -30,7 +30,8 @@ public class Main {
         System.out.println("0. GESTION DES UTILISATEURS");
 
         // Ajouter un préposé via le DTO
-        PreposeDTO preposeDTO = new PreposeDTO(0, "Pierre Tremblay", "pierre.tremblay@biblio.com", "514-555-1234");
+        PreposeDTO preposeDTO = new PreposeDTO(0,
+                "Pierre Tremblay", "pierre.tremblay@biblio.com", "514-555-1234");
         PreposeDTO preposeAjoute = bibliothequeService.ajouterPrepose(preposeDTO);
         System.out.println("Préposé ajouté via DTO: " + preposeAjoute);
 
@@ -55,7 +56,8 @@ public class Main {
         // Obtenir la liste de tous les utilisateurs directement
         System.out.println("\nListe de tous les utilisateurs (modèles):");
         List<Utilisateur> utilisateurs = utilisateurDAO.getUtilisateurs();
-        utilisateurs.forEach(u -> System.out.println("ID: " + u.getUserID() + ", Nom: " + u.getName() + ", Type: " + u.getClass().getSimpleName()));
+        utilisateurs.forEach(u -> System.out.println("ID: " + u.getUserID() + ", Nom: "
+                + u.getName() + ", Type: " + u.getClass().getSimpleName()));
 
         // Rechercher un utilisateur par ID avec DTO
         if (!utilisateursDTO.isEmpty()) {
@@ -69,9 +71,11 @@ public class Main {
         // 1. Ajouter des emprunteurs
         System.out.println("1. AJOUT D'EMPRUNTEURS");
         EmprunteurDTO emprunteur1 = bibliothequeService.ajouterEmprunteur(
-                new EmprunteurDTO(0, "Jean Dupont", "jean.dupont@email.com", "514-123-4567"));
+                new EmprunteurDTO(0,
+                        "Jean Dupont", "jean.dupont@email.com", "514-123-4567"));
         EmprunteurDTO emprunteur2 = bibliothequeService.ajouterEmprunteur(
-                new EmprunteurDTO(0, "Marie Tremblay", "marie.tremblay@email.com", "514-987-6543"));
+                new EmprunteurDTO(0,
+                        "Marie Tremblay", "marie.tremblay@email.com", "514-987-6543"));
 
         System.out.println("Emprunteur ajouté: " + emprunteur1);
         System.out.println("Emprunteur ajouté: " + emprunteur2);
@@ -79,7 +83,8 @@ public class Main {
         // Obtenir la liste des emprunteurs
         System.out.println("\nListe des emprunteurs:");
         List<Emprunteur> emprunteurs = utilisateurDAO.getEmprunteurs();
-        emprunteurs.forEach(e -> System.out.println("ID: " + e.getUserID() + ", Nom: " + e.getName() + ", Email: " + e.getEmail()));
+        emprunteurs.forEach(e ->
+                System.out.println("ID: " + e.getUserID() + ", Nom: " + e.getName() + ", Email: " + e.getEmail()));
 
         System.out.println();
 
@@ -94,20 +99,24 @@ public class Main {
                 new LivreDTO(0, "Le Petit Prince", 5, "978-2-07-040389-2",
                         "Antoine de Saint-Exupéry", "Gallimard", 96));
         LivreDTO livre3 = bibliothequeService.ajouterLivre(
-                new LivreDTO(0, "Harry Potter à l'école des sorciers", 2, "978-2-07-054417-9",
-                        "J.K. Rowling", "Gallimard", 308));
+                new LivreDTO(0, "Harry Potter à l'école des sorciers", 2,
+                        "978-2-07-054417-9","J.K. Rowling", "Gallimard", 308));
 
         // Ajouter des CDs
         CDDTO cd1 = bibliothequeService.ajouterCD(
-                new CDDTO(0, "Thriller", 4, "Michael Jackson", 42, "Pop"));
+                new CDDTO(0,
+                        "Thriller", 4, "Michael Jackson", 42, "Pop"));
         CDDTO cd2 = bibliothequeService.ajouterCD(
-                new CDDTO(0, "Back in Black", 3, "AC/DC", 42, "Rock"));
+                new CDDTO(0,
+                        "Back in Black", 3, "AC/DC", 42, "Rock"));
 
         // Ajouter des DVDs
         DVDDTO dvd1 = bibliothequeService.ajouterDVD(
-                new DVDDTO(0, "The Shawshank Redemption", 2, "Frank Darabont", 142, "R"));
+                new DVDDTO(0, "The Shawshank Redemption", 2, "Frank Darabont",
+                        142, "R"));
         DVDDTO dvd2 = bibliothequeService.ajouterDVD(
-                new DVDDTO(0, "Le fabuleux destin d'Amélie Poulain", 1, "Jean-Pierre Jeunet", 122, "R"));
+                new DVDDTO(0, "Le fabuleux destin d'Amélie Poulain", 1,
+                        "Jean-Pierre Jeunet", 122, "R"));
 
         System.out.println("Livre ajouté: " + livre1);
         System.out.println("Livre ajouté: " + livre2);
